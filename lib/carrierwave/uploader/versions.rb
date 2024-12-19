@@ -238,8 +238,6 @@ module CarrierWave
         end
       end
 
-    private
-
       def set_versions_to_cache_and_store(names)
         @versions_to_cache = source_versions_of(names)
         @versions_to_store = active_versions_with_names_in(@versions_to_cache + names)
@@ -284,16 +282,18 @@ module CarrierWave
         end
       end
 
+    private
+
       def dependent_versions
         active_versions.reject do |name, v|
           v.class.version_options[:from_version]
-        end.to_a + sibling_versions.select do |name, v|
+        end.to_a + active_sibling_versions.select do |name, v|
           v.class.version_options[:from_version] == self.class.version_names.last
         end.to_a
       end
 
-      def sibling_versions
-        parent_version.try(:versions) || []
+      def active_sibling_versions
+        parent_version&.active_versions || []
       end
 
       def full_filename(for_file)

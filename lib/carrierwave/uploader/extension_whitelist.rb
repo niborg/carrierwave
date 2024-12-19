@@ -33,7 +33,7 @@ module CarrierWave
       #
       def extension_allowlist
         if respond_to?(:extension_whitelist)
-          ActiveSupport::Deprecation.warn "#extension_whitelist is deprecated, use #extension_allowlist instead." unless instance_variable_defined?(:@extension_whitelist_warned)
+          ActiveSupport::Deprecation.new.warn "#extension_whitelist is deprecated, use #extension_allowlist instead." unless instance_variable_defined?(:@extension_whitelist_warned)
           @extension_whitelist_warned = true
           extension_whitelist
         end

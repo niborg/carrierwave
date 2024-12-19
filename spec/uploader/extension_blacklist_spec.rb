@@ -109,8 +109,10 @@ describe CarrierWave::Uploader do
     context "when there is a blacklist" do
       it "uses the blacklist but shows deprecation" do
         allow(uploader).to receive(:extension_blacklist).and_return(%w(jpg gif png))
+        deprecation_double = instance_double(ActiveSupport::Deprecation)
+        allow(ActiveSupport::Deprecation).to receive(:new).and_return(deprecation_double)
 
-        expect(ActiveSupport::Deprecation).to receive(:warn).with('#extension_blacklist is deprecated, use #extension_denylist instead.')
+        expect(deprecation_double).to receive(:warn).with('#extension_blacklist is deprecated, use #extension_denylist instead.')
         is_expected.to raise_error(CarrierWave::IntegrityError)
       end
 

@@ -15,7 +15,7 @@ describe CarrierWave::Uploader::Download do
     before do
       allow(CarrierWave).to receive(:generate_cache_id).and_return(cache_id)
 
-      stub_request(:get, "http://www.example.com/#{test_file_name}")
+      WebMock.stub_request(:get, "http://www.example.com/#{test_file_name}")
         .to_return(body: test_file, headers: {'content-type': 'image/jpeg'})
     end
 

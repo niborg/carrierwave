@@ -30,7 +30,7 @@ module CarrierWave
       #
       def content_type_denylist
         if respond_to?(:content_type_blacklist)
-          ActiveSupport::Deprecation.warn "#content_type_blacklist is deprecated, use #content_type_denylist instead." unless instance_variable_defined?(:@content_type_blacklist_warned)
+          ActiveSupport::Deprecation.new.warn "#content_type_blacklist is deprecated, use #content_type_denylist instead." unless instance_variable_defined?(:@content_type_blacklist_warned)
           @content_type_blacklist_warned = true
           content_type_blacklist
         end

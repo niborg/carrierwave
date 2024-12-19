@@ -92,11 +92,12 @@ describe CarrierWave::Uploader do
     context "when there is a whitelist" do
       it "uses the whitelist but shows deprecation" do
         allow(uploader).to receive(:content_type_whitelist).and_return(['image/gif'])
-
-        expect(ActiveSupport::Deprecation).to receive(:warn).with('#content_type_whitelist is deprecated, use #content_type_allowlist instead.')
-        expect(running {
+        deprecation_double = instance_double(ActiveSupport::Deprecation)
+        allow(ActiveSupport::Deprecation).to receive(:new).and_return(deprecation_double)
+        expect(deprecation_double).to receive(:warn).with('#content_type_whitelist is deprecated, use #content_type_allowlist instead.')
+        expect {
           uploader.cache!(bork_file)
-        }).to raise_error(CarrierWave::IntegrityError)
+        }.to raise_error(CarrierWave::IntegrityError)
       end
 
       it "looks for content_type_whitelist first for I18n translation" do
@@ -108,9 +109,9 @@ describe CarrierWave::Uploader do
             :content_type_whitelist_error => "Het is niet toegestaan om %{content_type} bestanden te uploaden"
           }
         }) do
-          expect(running {
+          expect {
             uploader.cache!(bork_file)
-          }).to raise_error(CarrierWave::IntegrityError, 'Het is niet toegestaan om text/plain bestanden te uploaden')
+          }.to raise_error(CarrierWave::IntegrityError, 'Het is niet toegestaan om text/plain bestanden te uploaden')
         end
       end
     end
